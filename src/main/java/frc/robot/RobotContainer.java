@@ -20,8 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Intake;
+import frc.robot.commands.ShooterCmds.Shoot;
+import frc.robot.commands.IntakeCmds.IntakeCollector;
+import frc.robot.commands.IntakeCmds.IntakeDeploy;
+import frc.robot.commands.IntakeCmds.IntakeDeployToggle;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,6 +38,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
+  private final Shooter shooter = new Shooter();
+  private final Intake intake = new Intake();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final static CommandJoystick m_driverController = new CommandJoystick(Constants.OperatorConstants.kDriverControllerPort);
   private final static CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);
@@ -84,10 +92,18 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
+    // Driver controller bindings (drivebase)
     m_driverController.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
     m_driverController.b().onTrue(Commands.runOnce(drivebase::resetIMU));
-   
+    
+    //Right trigger (RT) -> atirar
+    m_systemController.rightTrigger(0.1).whileTrue(new Shoot(shooter));
+    
+    //left trigger (LT) -> Coletar
+    m_systemController.leftTrigger(0.1).whileTrue(new IntakeCollector(intake));
+    
+    //botão (B) para dar deploy e retrair o intake
+    m_systemController.b().onTrue(new IntakeDeployToggle(intake));
   }
 
 

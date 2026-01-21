@@ -23,7 +23,6 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kSystemControllerPort = 1;
 
-    // Joystick Deadband
     public static final double LEFT_X_DEADBAND  = 0.1;
     public static final double LEFT_Y_DEADBAND  = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
@@ -32,15 +31,14 @@ public final class Constants {
 
   public static class SwerveConstants{
     public static final double kSwerveSteeringRatio = 21.428571428571428571428571428571;
-    public static final double ROBOT_MASS = 40.5; // 32lbs * kg per pound
+    public static final double ROBOT_MASS = 40.5;
     public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, 0), ROBOT_MASS);
-    public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
+    public static final double LOOP_TIME  = 0.13;
     public static final double MAX_SPEED  = Units.feetToMeters(3);
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(6.5,0.00000008,1.39);
     public static final PIDConstants ANGLE_PID   = new PIDConstants(0, 0, 0);
     public static RobotConfig robotConfig;
 
-      // Maximum speed of the robot in meters per second, used to limit acceleration.
   }
 
   public static final class AutonConstants
@@ -51,91 +49,69 @@ public final class Constants {
   public static final class DrivebaseConstants
   {
 
-    // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
-  public static final class ElevatorConstants
   
+
+  public static final class IntakeSubsystem
   {
-    
-    public static final int Elevator0ID = 14;
-    public static final int Elevator1ID  = 15;
-    public static final double KMaxSpeed = 1;
-    public static final double KmaxAcce = 0;
-    public static final double Kp = 1;
-    public static final double Ki = 0;
-    public static final double Kd = 0.1;
-    public static final double Kiz = 0;
-    public static final double kArmMaxOutput = 1;
-    public static final double kArmMinOutput = -1;
-    public static final double ArmPosConversionFactor = 0;
-    public static final double ArmVeloConversionFactor = 0;
-    public static final double fwdSoftLimit = 0;
-    public static final double revrsSoftLimit = 0;
-    public static final double kHomePosition = 0.0;
-    public static final double MaxAllowedError= 0.4;
-    public static final double kFeederStation = 0;
-    public static final double kL1 = 0;
-    public static final double kL2 = 0;
-    public static final double kL3 = 0;
-    public static final double kL4 = 0;
-    public static final double kl0 = 0;
+    public static final int IntakeMotorID = 0;
+    public static final boolean intakeInverted = false;
+    public static final double intakeConversionFactor = 1.0 / 4.0;
+    public static final double iP = 0;
+    public static final double iI = 0;
+    public static final double iD = 0;
+
+    public static final double collectorKp = 0.0;
+    public static final double collectorKi = 0.0;
+    public static final double collectorKd = 0.0;
+    public static final double collectorKsVolts = 0.0;
+    public static final double collectorKvVoltPerRpm = 0.0;
+    public static final double collectorKaVoltPerRpmPerSec = 0.0;
+
+    public static final double collectorTargetRpm = 1500.0;
+    public static final double deployVoltage = 4.0;
+
+    public static final double deployMaxPosition = 1.0;
+    public static final double deployHoldEpsilon = 0.02;
+
+    public static final int LinearMotorID = 0;
+    public static final boolean LinearInverted = false;  
+    public static final double LinearConversionFactor = 1.0 / 27.0;
+    public static final double lP = 0;
+    public static final double lI = 0;
+    public static final double lD = 0;
 
   }
 
-  public static final class CoralIntakeConstants
+  public static final class ShooterSubsystem
   {
-      public static final int IntakeMotorId = 16;
+    public static final int ShooterID = 0;
+    public static final boolean ShooterInverted = false;
+    public static final double ShooterConversionFactor = 1;
+    public static final double P = 1;
+    public static final double I = 1;
+    public static final double D = 1;
+
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double kSVolts = 0.0;
+    public static final double kVVoltPerRpm = 0.0;
+    public static final double kAVoltPerRpmPerSec = 0.0;
+
+    public static final double targetRpm = 2500.0;
   }
 
-  public static final class AlgaeIntakeConstants
+  public static final class ClimberSubsystem
   {
-      public static final int IntakeMotorId = 18;
-      public static final int MoveMotorId = 17;
-      public static final int DutyCycleChannel = 7;
-      public static final double MoveMotorFwdSoftLimit = 50;
-      public static final double MoveMotorRvrsSoftLimit = 50;
-      public static final double IntakeCollectSetPoint = 0;
-      public static final double intakeHoldSetPoint = 0;
-      public static final double spCollect = 0;
-      public static final double spRealease = 0;
-      public static final double IntakeCollectSpeed = 0.5;
-      public static final double IntakeRealeaseSpeed = -0.5;
-      public static final double kP = 0;
-      public static final double kI = 0;
-      public static final double kD = 0;
-  }
+    public static final int ClimberID = 0;
+    public static final boolean ClimberInverted = false;
+    public static final double ClimberConversionFactor = 1;
+    public static final double P = 0;
+    public static final double I = 0;
+    public static final double D = 0;
 
-  public static final class ArmConstants
-  {
-    public static final int ShoulderMotorID = 19;
-    public static final int WristMotorID = 20;
-    public static final int ShoulderDigitalSource = 5;
-    public static final int WristDigitalSource = 6;
-    public static final double SfwdSoftLimit = 0;
-    public static final double SrvrsSoftLimit = 0;
-    public static final double WfwdSoftLimit = 0;
-    public static final double WrvrsSoftLimit = 0;
-    public static final double restSetpoint = 0;
-    public static final double sourceSetpoint = 0;
-    public static final double L1setPoint = 0;
-    public static final double L2setPoint = 0;
-    public static final double L3setPoint = 0;
-    public static final double L4setPoint = 0;
-    public static final double WristCollect = 0;
-    public static final double WristScore = 0;
-    public static final double Kps = 0;
-    public static final double Kis = 0;
-    public static final double Kds = 0;
-    public static final double Kpw = 0;
-    public static final double Kiw = 0;
-    public static final double Kdw = 0;
-  }
-
-  public static final class ColectorConstants
-  {
-    public static final int colectorMotorID = 0;
-    
   }
 }
