@@ -28,7 +28,7 @@ public final class Constants {
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
   }
-
+//mudar massa do robô
   public static class SwerveConstants{
     public static final double kSwerveSteeringRatio = 21.428571428571428571428571428571;
     public static final double ROBOT_MASS = 40.5;
@@ -52,8 +52,7 @@ public final class Constants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
-  
-
+//Atualizar valores de pid e id do motor
   public static final class IntakeSubsystem
   {
     public static final int IntakeMotorID = 0;
@@ -84,7 +83,7 @@ public final class Constants {
     public static final double lD = 0;
 
   }
-
+//Atualizar valores de pid e feedfoward e id do motor
   public static final class ShooterSubsystem
   {
     public static final int ShooterID = 0;
@@ -103,7 +102,7 @@ public final class Constants {
 
     public static final double targetRpm = 2500.0;
   }
-
+//Atualizar valores de pid e id do motor
   public static final class ClimberSubsystem
   {
     public static final int ClimberID = 0;

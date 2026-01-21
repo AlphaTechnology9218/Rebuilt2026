@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -41,9 +42,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Intake intake = new Intake();
   
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  //private final static CommandJoystick m_driverController = new CommandJoystick(Constants.OperatorConstants.kDriverControllerPort);
-  private final static CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);
+  private final static CommandPS4Controller m_driverController = new CommandPS4Controller(Constants.OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_systemController = new CommandXboxController(Constants.OperatorConstants.kSystemControllerPort);
   private SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -68,10 +67,11 @@ public class RobotContainer {
       //para frente e para esquerda
       //joystick esquerdo controla movimentação 
       //joystick direito controla a velocidade angular do robô
+      //R2 (gatilho direito) controla escala de velocidade
     Command baseDriveCommand = drivebase.driveCommand(
-      () -> MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.max(-m_driverController.getRightTriggerAxis() + 1, 0.3), OperatorConstants.LEFT_X_DEADBAND),
-      () -> MathUtil.applyDeadband(- m_driverController.getLeftX()* Math.max(-m_driverController.getRightTriggerAxis()+ 1, 0.3), OperatorConstants.LEFT_Y_DEADBAND),
-      () -> -m_driverController.getRightX() * Math.max(m_driverController.getRightTriggerAxis()+ 1, 0.565));
+      () -> MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.max(-m_driverController.getR2Axis() + 1, 0.3), OperatorConstants.LEFT_X_DEADBAND),
+      () -> MathUtil.applyDeadband(- m_driverController.getLeftX()* Math.max(-m_driverController.getR2Axis()+ 1, 0.3), OperatorConstants.LEFT_Y_DEADBAND),
+      () -> -m_driverController.getRightX() * Math.max(m_driverController.getR2Axis()+ 1, 0.565));
 
     
 
@@ -92,9 +92,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Driver controller bindings (drivebase)
-    m_driverController.a().onTrue(Commands.runOnce(drivebase::zeroGyro));
-    m_driverController.b().onTrue(Commands.runOnce(drivebase::resetIMU));
+    // Driver controller bindings (drivebase) - PS5 controller
+    m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
+    m_driverController.circle().onTrue(Commands.runOnce(drivebase::resetIMU));
     
     //Right trigger (RT) -> atirar
     m_systemController.rightTrigger(0.1).whileTrue(new Shoot(shooter));
