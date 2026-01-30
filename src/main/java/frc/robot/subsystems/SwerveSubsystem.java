@@ -17,7 +17,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase
   
   private final Pigeon2 pigeon = new Pigeon2(13);
 
-  private final Field2d field2d = new Field2d();
+  //private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
   private final boolean visionDriveTest = false;
 
@@ -97,7 +96,7 @@ public class SwerveSubsystem extends SubsystemBase
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.SwerveConstants.MAX_SPEED, 
-                                                                    new Pose2d(new Translation2d(Meter.of(1),
+                                                                    new Pose2d(new Translation2d(Meter.of(2),
                                                                                                Meter.of(4)),
                                                                              Rotation2d.fromDegrees(0)));
       // Alternative method if you don't want to supply the conversion factor via JSON files.
@@ -144,10 +143,6 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    // Atualiza campo virtual com a pose atual do robô (odometria do swerveDrive).
-    field2d.setRobotPose(getPose());
-    SmartDashboard.putData("Field", field2d);
-
     // When vision is enabled we must manually update odometry in SwerveDrive
     if (visionDriveTest)
     {
@@ -532,6 +527,8 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive.kinematics;
   }
 
+
+
   /**
    * Resets odometry to the given pose. Gyro angle and module positions do not need to be reset when calling this
    * method.  However, if either gyro angle or module position is reset, this must be called in order for odometry to
@@ -552,12 +549,6 @@ public class SwerveSubsystem extends SubsystemBase
   public Pose2d getPose()
   {
     return swerveDrive.getPose();
-  }
-
-  /** Reseta a odometria para uma pose específica (atalho mais explícito). */
-  public void resetOdometryToPose(Pose2d pose)
-  {
-    resetOdometry(pose);
   }
 
   public double getMaximumSpeed(){

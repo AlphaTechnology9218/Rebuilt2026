@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.527868150684932,
-        "y": 1.718557363013698
+        "x": 15.774422253920797,
+        "y": 7.276134094146064
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.175556506849315,
-        "y": 1.9439426369863007
+        "x": 16.05211188024234,
+        "y": 7.7801784235105105
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "humano player"
     },
     {
       "anchor": {
-        "x": 5.108732876712329,
-        "y": 2.544970034246576
+        "x": 13.341954350927246,
+        "y": 4.054407988587732
       },
       "prevControl": {
-        "x": 5.784888698630137,
-        "y": 2.2144049657534244
+        "x": 13.156660209723306,
+        "y": 4.222235522787261
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "endpointmidleft"
+      "linkedName": "posiç;ão pontuar dv"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -149.53445508054023
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto D vermelho",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.31531568210363
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

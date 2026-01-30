@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.587599335923475,
-        "y": 4.029428255774851
+        "x": 0.700884450784593,
+        "y": 6.0081455064194005
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.9599599032795565,
-        "y": 4.162124445009473
+        "x": 2.785950623242012,
+        "y": 6.18505392160734
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "rota 3 f"
     },
     {
       "anchor": {
-        "x": 6.1496386103187595,
-        "y": 4.029428255774851
+        "x": 3.133352353780314,
+        "y": 4.028530670470756
       },
       "prevControl": {
-        "x": 5.899849708107037,
-        "y": 4.039699785936542
+        "x": 2.4071854663753145,
+        "y": 4.295550499045304
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto E azul",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

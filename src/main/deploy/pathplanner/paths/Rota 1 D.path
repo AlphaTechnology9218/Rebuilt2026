@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4574914383561646,
-        "y": 1.0724529109589036
+        "x": 3.5383012048192777,
+        "y": 0.8331807228915671
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6647535094994272,
-        "y": 1.3947735718997092
+        "x": 2.796947218259629,
+        "y": 2.42413694721826
       },
       "isLocked": false,
-      "linkedName": "sourceleft"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.485958904109589,
-        "y": 2.755329623287671
+        "x": 2.9392724679029953,
+        "y": 4.015592011412268
       },
       "prevControl": {
-        "x": 2.108665369434788,
-        "y": 2.4767328363500853
+        "x": 3.167404943526214,
+        "y": 2.802114477134066
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourcereef"
+      "linkedName": "rota1 f d"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 148.39249775375112
+    "rotation": -0.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto D azul",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -125.00000000000001
+    "rotation": -0.0
   },
   "useDefaultConstraints": true
 }

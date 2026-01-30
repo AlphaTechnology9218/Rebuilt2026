@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3222602739726028,
-        "y": 6.857341609589041
+        "x": 12.979671897289585,
+        "y": 0.7291726105563499
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7480260040203355,
-        "y": 7.036664059029639
+        "x": 13.833623395149784,
+        "y": 2.0100998573466473
       },
       "isLocked": false,
-      "linkedName": "sourceblueleft"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.123758561643836,
-        "y": 5.595184075342465
+        "x": 13.212567760342367,
+        "y": 4.067346647646221
       },
       "prevControl": {
-        "x": 4.320116539355247,
-        "y": 5.88527822602445
+        "x": 13.103192917236575,
+        "y": 2.7626939895918836
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "rota 1 fve"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -30.65066795705287
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto E vermelho",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.90972307917775
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.947003424657535,
-        "y": 6.045954623287671
+        "x": 0.7267617689015686,
+        "y": 0.7032952924393738
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.947003424657538,
-        "y": 6.045954623287671
+        "x": 1.490142653352353,
+        "y": 1.3761055634807442
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "final direita azul"
     },
     {
       "anchor": {
-        "x": 12.230907534246576,
-        "y": 5.369798801369864
+        "x": 3.042781740370898,
+        "y": 4.015592011412268
       },
       "prevControl": {
-        "x": 11.230907534246576,
-        "y": 5.369798801369864
+        "x": 1.0502282453637657,
+        "y": 2.2947503566333807
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 30.17352002964436
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto D azul",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

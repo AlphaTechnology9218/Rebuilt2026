@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.485958904109589,
-        "y": 2.755329623287671
+        "x": 15.864992867332383,
+        "y": 2.1136091298145514
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.59958177525608,
-        "y": 2.239571075564684
+        "x": 16.502507445973553,
+        "y": 1.6922615740001545
       },
       "isLocked": false,
-      "linkedName": "sourcereef"
+      "linkedName": "final esquerda vermelho"
     },
     {
       "anchor": {
-        "x": 1.4574914383561646,
-        "y": 1.0724529109589036
+        "x": 13.212567760342367,
+        "y": 4.067346647646221
       },
       "prevControl": {
-        "x": 2.2435497546331815,
-        "y": 1.790193814054707
+        "x": 12.97149294726704,
+        "y": 4.2165852678439615
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourceleft"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -125.00000000000001
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto E vermelho",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 148.39249775375112
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

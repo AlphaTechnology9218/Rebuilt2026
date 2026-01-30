@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -12,181 +11,184 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.IntakeSubsystem;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
-//LINEAR 1/27
-//INTAKE 1/4
 public class Intake extends SubsystemBase {
-    Double LinearSetpoint = 0.0;
-    SparkMax IntakeMotor = new SparkMax(IntakeSubsystem.IntakeMotorID, MotorType.kBrushless);
-    SparkMax LinearMotor = new SparkMax(IntakeSubsystem.LinearMotorID, MotorType.kBrushless);
-    SparkMaxConfig intakeConfig;
-    SparkMaxConfig LinearConfig;
+    private final SparkMax intakeMotor = new SparkMax(IntakeSubsystem.IntakeMotorID, MotorType.kBrushless);
+    private final SparkMax linearMotor = new SparkMax(IntakeSubsystem.LinearMotorID, MotorType.kBrushless);
+    private final SparkMaxConfig intakeConfig;
+    private final SparkMaxConfig linearConfig;
 
     private boolean isDeployed = false;
-
-    private final PIDController collectorPid = new PIDController(
-        IntakeSubsystem.collectorKp,
-        IntakeSubsystem.collectorKi,
-        IntakeSubsystem.collectorKd
-    );
-    private final SimpleMotorFeedforward collectorFF = new SimpleMotorFeedforward(
-        IntakeSubsystem.collectorKsVolts,
-        IntakeSubsystem.collectorKvVoltPerRpm,
-        IntakeSubsystem.collectorKaVoltPerRpmPerSec
-    );
     private double collectorTargetRpm = 0.0;
-    private boolean collectorClosedLoopEnabled = false;
 
-    public Intake()
-    {
+    public Intake() {
         intakeConfig = new SparkMaxConfig();
-        LinearConfig = new SparkMaxConfig();
+        linearConfig = new SparkMaxConfig();
 
-        intakeConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(20,40).inverted(IntakeSubsystem.intakeInverted);
-
+        // Configuração do collector motor (NEO 550)
+        intakeConfig.idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(20, 40)  // 20A contínuo, 40A pico para NEO 550
+            .inverted(IntakeSubsystem.intakeInverted);
+        
         intakeConfig.encoder.velocityConversionFactor(IntakeSubsystem.intakeConversionFactor);
-
-        intakeConfig.closedLoop.pid(IntakeSubsystem.iP,IntakeSubsystem.iI,IntakeSubsystem.iD, ClosedLoopSlot.kSlot0);
-
-        LinearConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40,60).inverted(IntakeSubsystem.LinearInverted);
         
-        LinearConfig.encoder.positionConversionFactor(IntakeSubsystem.LinearConversionFactor).velocityConversionFactor(IntakeSubsystem.LinearConversionFactor);
-
-        LinearConfig.closedLoop.pid(IntakeSubsystem.lP, IntakeSubsystem.lD, IntakeSubsystem.lI, ClosedLoopSlot.kSlot0);
-
-        IntakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        LinearMotor.configure(LinearConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        // Ramp rate para proteger transmissão
+        intakeConfig.openLoopRampRate(IntakeSubsystem.collectorClosedLoopRampRate);
         
+        // Malha fechada interna para velocidade
+        intakeConfig.closedLoop
+            .pid(IntakeSubsystem.collectorKp, IntakeSubsystem.collectorKi, IntakeSubsystem.collectorKd, ClosedLoopSlot.kSlot0);
+
+        // Configuração do linear motor (deploy)
+        linearConfig.idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(40, 60)
+            .inverted(IntakeSubsystem.LinearInverted);
+        
+        linearConfig.encoder
+            .positionConversionFactor(IntakeSubsystem.LinearConversionFactor)
+            .velocityConversionFactor(IntakeSubsystem.LinearConversionFactor);
+        
+        // Ramp rate para proteger transmissão
+        linearConfig.openLoopRampRate(IntakeSubsystem.linearClosedLoopRampRate);
+        
+        // Malha fechada interna para posição
+        linearConfig.closedLoop
+            .pid(IntakeSubsystem.linearKp, IntakeSubsystem.linearKi, IntakeSubsystem.linearKd, ClosedLoopSlot.kSlot0);
+
+        intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        linearMotor.configure(linearConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
-    public void LinearToCollect()
-    {
-        LinearMotor.getClosedLoopController().setSetpoint(LinearSetpoint, ControlType.kPosition);
+    // Métodos do collector (intake roller)
+    
+    /**
+     * Define a velocidade alvo do collector usando malha fechada interna do SPARK MAX.
+     * O feedforward pode ser configurado no PID config se necessário.
+     * @param rpm Velocidade alvo em RPM
+     */
+    public void setCollectorTargetRpm(double rpm) {
+        collectorTargetRpm = rpm;
+        intakeMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
     }
 
-    public void LinearToInitial()
-    {
-        LinearMotor.getClosedLoopController().setSetpoint(0.0, ControlType.kPosition);
+    /**
+     * Retorna a velocidade atual do collector em RPM.
+     */
+    public double getCollectorVelocity() {
+        return intakeMotor.getEncoder().getVelocity();
     }
 
-    public void LinearStop()
-    {
-        LinearMotor.stopMotor();
+    /**
+     * Verifica se o collector está no setpoint com tolerância configurada.
+     */
+    public boolean isCollectorAtSetpoint() {
+        return Math.abs(getCollectorVelocity() - collectorTargetRpm) <= IntakeSubsystem.collectorVelocityTolerance;
     }
 
-    public boolean LinearAtsetpoint()
-    {
-        return LinearMotor.getClosedLoopController().isAtSetpoint();
+    /**
+     * Para o motor do collector.
+     */
+    public void stopCollector() {
+        collectorTargetRpm = 0.0;
+        intakeMotor.stopMotor();
     }
 
-    public void IntakeActive(double velocitySetpoint)
-    {
-        IntakeMotor.getClosedLoopController().setSetpoint(velocitySetpoint, ControlType.kVelocity);
+    // Métodos do linear motor (deploy)
+    
+    /**
+     * Move o deploy para a posição de coleta.
+     */
+    public void linearToCollect() {
+        linearMotor.getClosedLoopController().setSetpoint(IntakeSubsystem.deployMaxPosition, ControlType.kPosition);
     }
 
-    public double getLinearPosition()
-    {
-        return LinearMotor.getEncoder().getPosition();
+    /**
+     * Move o deploy para a posição inicial (retraído).
+     */
+    public void linearToInitial() {
+        linearMotor.getClosedLoopController().setSetpoint(0.0, ControlType.kPosition);
     }
 
-    public boolean isDeployed()
-    {
+    /**
+     * Para o motor linear.
+     */
+    public void linearStop() {
+        linearMotor.stopMotor();
+    }
+
+    /**
+     * Verifica se o deploy está no setpoint com tolerância configurada.
+     */
+    public boolean isLinearAtSetpoint() {
+        return linearMotor.getClosedLoopController().isAtSetpoint() || 
+               Math.abs(linearMotor.getEncoder().getPosition() - linearMotor.getClosedLoopController().getSetpoint()) <= IntakeSubsystem.linearPositionTolerance;
+    }
+
+    /**
+     * Retorna a posição atual do deploy em rotações.
+     */
+    public double getLinearPosition() {
+        return linearMotor.getEncoder().getPosition();
+    }
+
+    // Métodos de deploy/retract (open-loop voltage control)
+    
+    public boolean isDeployed() {
         return isDeployed;
     }
 
-    public void stopDeploy()
-    {
-        LinearMotor.stopMotor();
+    public void stopDeploy() {
+        linearMotor.stopMotor();
     }
 
-    public void retractUntilZero()
-    {
+    public void retractUntilZero() {
         isDeployed = false;
         setDeployVoltage(-IntakeSubsystem.deployVoltage);
     }
 
-    public void deployUntilMax()
-    {
+    public void deployUntilMax() {
         isDeployed = true;
         setDeployVoltage(IntakeSubsystem.deployVoltage);
     }
 
-    public void toggleDeploy()
-    {
+    public void toggleDeploy() {
         isDeployed = !isDeployed;
     }
 
-    public void applyDeploy()
-    {
-        if (isDeployed)
-        {
+    public void applyDeploy() {
+        if (isDeployed) {
             deployUntilMax();
-        } else
-        {
+        } else {
             retractUntilZero();
         }
     }
 
-    public void setDeployVoltage(double volts)
-    {
+    public void setDeployVoltage(double volts) {
         double pos = getLinearPosition();
 
-        if (volts > 0 && pos >= IntakeSubsystem.deployMaxPosition)
-        {
+        if (volts > 0 && pos >= IntakeSubsystem.deployMaxPosition) {
             stopDeploy();
             return;
         }
 
-        if (volts < 0 && pos <= 0.0)
-        {
+        if (volts < 0 && pos <= 0.0) {
             stopDeploy();
             return;
         }
 
-        LinearMotor.setVoltage(MathUtil.clamp(volts, -12.0, 12.0));
+        linearMotor.setVoltage(MathUtil.clamp(volts, -12.0, 12.0));
     }
 
-    public boolean isAtDeployLimit()
-    {
+    public boolean isAtDeployLimit() {
         double pos = getLinearPosition();
         return pos >= IntakeSubsystem.deployMaxPosition - IntakeSubsystem.deployHoldEpsilon;
     }
 
-    public boolean isAtRetractLimit()
-    {
+    public boolean isAtRetractLimit() {
         double pos = getLinearPosition();
         return pos <= IntakeSubsystem.deployHoldEpsilon;
-    }
-
-
-
-    public void setCollectorTargetRpmWithFF(double rpm)
-    {
-        collectorTargetRpm = rpm;
-        collectorClosedLoopEnabled = true;
-        collectorPid.reset();
-    }
-
-    public double getCollectorVelocity()
-    {
-        return IntakeMotor.getEncoder().getVelocity();
-    }
-
-    public void stopCollector()
-    {
-        collectorClosedLoopEnabled = false;
-        collectorTargetRpm = 0.0;
-        IntakeMotor.stopMotor();
-    }
-
-    public void stopintake()
-    {
-        IntakeMotor.stopMotor();
     }
 
     @Override
@@ -194,17 +196,9 @@ public class Intake extends SubsystemBase {
         double collectorRpm = getCollectorVelocity();
         SmartDashboard.putNumber("IntakeSpeed", collectorRpm);
         SmartDashboard.putNumber("CollectorTargetRpm", collectorTargetRpm);
-        SmartDashboard.putBoolean("CollectorClosedLoopEnabled", collectorClosedLoopEnabled);
+        SmartDashboard.putBoolean("CollectorAtSetpoint", isCollectorAtSetpoint());
         SmartDashboard.putNumber("LinearPos", getLinearPosition());
+        SmartDashboard.putBoolean("LinearAtSetpoint", isLinearAtSetpoint());
         SmartDashboard.putBoolean("DeployIsDeployed", isDeployed);
-
-        if (collectorClosedLoopEnabled)
-        {
-            double pidOut = collectorPid.calculate(collectorRpm, collectorTargetRpm);
-            double ffVolts = collectorFF.calculate(collectorTargetRpm);
-            double volts = MathUtil.clamp(ffVolts + pidOut, -12.0, 12.0);
-            IntakeMotor.setVoltage(volts);
-            SmartDashboard.putNumber("CollectorAppliedVolts", volts);
-        }
     }
 }

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.8916523972602737,
-        "y": 5.610209760273973
+        "x": 1.6065905848787443,
+        "y": 6.0081455064194005
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2639404273746164,
-        "y": 6.073328216352175
+        "x": 1.8607654213145277,
+        "y": 5.958589535985987
       },
       "isLocked": false,
-      "linkedName": "reefRightBlue"
+      "linkedName": "Rota 2 F"
     },
     {
       "anchor": {
-        "x": 1.3222602739726028,
-        "y": 6.857341609589041
+        "x": 0.700884450784593,
+        "y": 6.0081455064194005
       },
       "prevControl": {
-        "x": 3.4452178630947925,
-        "y": 6.087419856811338
+        "x": 0.970259787186385,
+        "y": 6.039053817069067
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourceblueleft"
+      "linkedName": "rota 3 f"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 125.90972307917775
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Auto E azul",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 29.74488129694217
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

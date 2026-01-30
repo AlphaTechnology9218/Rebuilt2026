@@ -1,0 +1,70 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Rota 1 E B"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Rota 2 E B"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "pontuação 100% confiavel"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Rota 3 E B"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "coletar bolas"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Rota 4 e B"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

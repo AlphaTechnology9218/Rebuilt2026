@@ -52,65 +52,94 @@ public final class Constants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
-//Atualizar valores de pid e id do motor
   public static final class IntakeSubsystem
   {
-    public static final int IntakeMotorID = 0;
+    // Collector motor (NEO 550)
+    public static final int IntakeMotorID = 10;
     public static final boolean intakeInverted = false;
     public static final double intakeConversionFactor = 1.0 / 4.0;
-    public static final double iP = 0;
-    public static final double iI = 0;
-    public static final double iD = 0;
-
-    public static final double collectorKp = 0.0;
-    public static final double collectorKi = 0.0;
+    
+    // PID constants para SparkClosedLoopController (velocidade)
+    public static final double collectorKp = 0.0001;
+    public static final double collectorKi = 0.000001;
     public static final double collectorKd = 0.0;
+    
+    // Feedforward constants (RPM-based)
     public static final double collectorKsVolts = 0.0;
-    public static final double collectorKvVoltPerRpm = 0.0;
+    public static final double collectorKvVoltPerRpm = 0.0001;
     public static final double collectorKaVoltPerRpmPerSec = 0.0;
-
+    
+    // Ramp rate para proteger transmissão (segundos)
+    public static final double collectorClosedLoopRampRate = 0.2;
+    
+    // Tolerância para isAtSetpoint (RPM)
+    public static final double collectorVelocityTolerance = 50.0;
+    
     public static final double collectorTargetRpm = 1500.0;
-    public static final double deployVoltage = 4.0;
-
-    public static final double deployMaxPosition = 1.0;
-    public static final double deployHoldEpsilon = 0.02;
-
-    public static final int LinearMotorID = 0;
+    
+    // Deploy motor (linear)
+    public static final int LinearMotorID = 11;
     public static final boolean LinearInverted = false;  
     public static final double LinearConversionFactor = 1.0 / 27.0;
-    public static final double lP = 0;
-    public static final double lI = 0;
-    public static final double lD = 0;
-
+    
+    // PID constants para SparkClosedLoopController (posição)
+    public static final double linearKp = 0.1;
+    public static final double linearKi = 0.0;
+    public static final double linearKd = 0.0;
+    
+    // Ramp rate para deploy (segundos)
+    public static final double linearClosedLoopRampRate = 0.1;
+    
+    // Tolerância para posição (rotações)
+    public static final double linearPositionTolerance = 0.05;
+    
+    public static final double deployVoltage = 4.0;
+    public static final double deployMaxPosition = 1.0;
+    public static final double deployHoldEpsilon = 0.02;
   }
-//Atualizar valores de pid e feedfoward e id do motor
   public static final class ShooterSubsystem
   {
-    public static final int ShooterID = 0;
+    public static final int ShooterID = 14;
     public static final boolean ShooterInverted = false;
-    public static final double ShooterConversionFactor = 1;
-    public static final double P = 1;
-    public static final double I = 1;
-    public static final double D = 1;
+    public static final double ShooterConversionFactor = 1.0;
 
-    public static final double kP = 0.0;
-    public static final double kI = 0.0;
+    public static final int shooterCurrentLimitContinuousAmps = 40;
+    public static final int shooterCurrentLimitPeakAmps = 60;
+    
+    // PID constants para SparkClosedLoopController (velocidade)
+    public static final double kP = 0.0001;
+    public static final double kI = 0.000001;
     public static final double kD = 0.0;
+    
+    // Feedforward constants (RPM-based)
     public static final double kSVolts = 0.0;
-    public static final double kVVoltPerRpm = 0.0;
+    public static final double kVVoltPerRpm = 0.0001;
     public static final double kAVoltPerRpmPerSec = 0.0;
-
+    
+    // Ramp rate para proteger transmissão (segundos)
+    public static final double closedLoopRampRate = 0.2;
+    
+    // Tolerância para isAtSetpoint (RPM)
+    public static final double velocityTolerance = 50.0;
+    
+    // Target RPM padrão
     public static final double targetRpm = 2500.0;
   }
-//Atualizar valores de pid e id do motor
   public static final class ClimberSubsystem
   {
-    public static final int ClimberID = 0;
+    public static final int ClimberID = 13;
     public static final boolean ClimberInverted = false;
-    public static final double ClimberConversionFactor = 1;
-    public static final double P = 0;
-    public static final double I = 0;
-    public static final double D = 0;
-
+    public static final double ClimberConversionFactor = 1.0;
+    
+    // PID constants para SparkClosedLoopController (posição)
+    public static final double kP = 0.1;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    
+    // Ramp rate para proteger transmissão (segundos)
+    public static final double closedLoopRampRate = 0.1;
+    
+    // Tolerância para posição (rotações)
+    public static final double positionTolerance = 0.05;
   }
 }

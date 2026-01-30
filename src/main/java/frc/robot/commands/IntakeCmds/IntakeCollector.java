@@ -8,41 +8,42 @@ public class IntakeCollector extends Command {
     private final Intake intake;
     private final double targetRpm;
 
-    //rodas utilizando pid e feedfoward para coletar a bola
-    public IntakeCollector(Intake intake, double targetRpm)
-    {
+    /**
+     * Comando para coletar usando velocidade alvo específica.
+     * @param intake Subsystem do intake
+     * @param targetRpm Velocidade alvo em RPM
+     */
+    public IntakeCollector(Intake intake, double targetRpm) {
         this.intake = intake;
         this.targetRpm = targetRpm;
         addRequirements(intake);
     }
 
-
-    public IntakeCollector(Intake intake)
-    {
+    /**
+     * Comando para coletar usando velocidade padrão de Constants.
+     */
+    public IntakeCollector(Intake intake) {
         this(intake, Constants.IntakeSubsystem.collectorTargetRpm);
     }
 
     @Override
-    public void initialize()
-    {
-        intake.setCollectorTargetRpmWithFF(targetRpm);
+    public void initialize() {
+        intake.setCollectorTargetRpm(targetRpm);
     }
 
     @Override
-    public void execute()
-    {
-
+    public void execute() {
+        // Malha fechada roda internamente no SPARK MAX
     }
 
     @Override
-    public void end(boolean interrupted)
-    {
+    public void end(boolean interrupted) {
         intake.stopCollector();
     }
 
     @Override
-    public boolean isFinished()
-    {
+    public boolean isFinished() {
+        // Mantém rodando enquanto o botão estiver pressionado
         return false;
     }
 }

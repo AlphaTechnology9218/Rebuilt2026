@@ -1,0 +1,56 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rota 1 ve"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rota 2 ve"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "coletar bolinhas "
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "rota 3 ve"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rota 4 ve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "pontuação 100% confiavel"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

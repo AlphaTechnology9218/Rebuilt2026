@@ -1,8 +1,8 @@
 package frc.robot.commands.IntakeCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
-
 
 public class IntakeDeployToggle extends Command {
     private final Intake intake;
@@ -14,7 +14,6 @@ public class IntakeDeployToggle extends Command {
 
     @Override
     public void initialize() {
-
         intake.toggleDeploy();
     }
 
@@ -30,11 +29,11 @@ public class IntakeDeployToggle extends Command {
 
     @Override
     public boolean isFinished() {
-        if (intake.isDeployed())
-        {
-            return intake.getLinearPosition() >= frc.robot.Constants.IntakeSubsystem.deployMaxPosition - frc.robot.Constants.IntakeSubsystem.deployHoldEpsilon;
+        // Simplificado: usa posição atual comparada ao limite com tolerância
+        if (intake.isDeployed()) {
+            return intake.isAtDeployLimit();
+        } else {
+            return intake.isAtRetractLimit();
         }
-        return intake.getLinearPosition() <= frc.robot.Constants.IntakeSubsystem.deployHoldEpsilon;
     }
 }
-

@@ -1,10 +1,6 @@
 package frc.robot.subsystems;
 import frc.robot.Constants.ShooterSubsystem;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.MathUtil;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -16,87 +12,71 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-public class Shooter extends SubsystemBase{
-    SparkMax Shooter = new SparkMax(ShooterSubsystem.ShooterID, MotorType.kBrushless);
-    SparkMaxConfig ShooterConfig;
 
-    private final PIDController velocityPid = new PIDController(
-        ShooterSubsystem.kP,
-        ShooterSubsystem.kI,
-        ShooterSubsystem.kD
-    );
-    private final SimpleMotorFeedforward velocityFF = new SimpleMotorFeedforward(
-        ShooterSubsystem.kSVolts,
-        ShooterSubsystem.kVVoltPerRpm,
-        ShooterSubsystem.kAVoltPerRpmPerSec
-    );
-
+public class Shooter extends SubsystemBase {
+    private final SparkMax shooter = new SparkMax(ShooterSubsystem.ShooterID, MotorType.kBrushless);
+    private final SparkMaxConfig shooterConfig;
+    
     private double targetRpm = 0.0;
-    private boolean closedLoopEnabled = false;
 
-    public Shooter(){
-        ShooterConfig = new SparkMaxConfig();
-        ShooterConfig.idleMode(IdleMode.kCoast)
-        .inverted(ShooterSubsystem.ShooterInverted)
-        .smartCurrentLimit(20, 40);
-
-        ShooterConfig.encoder.velocityConversionFactor(ShooterSubsystem.ShooterConversionFactor);
-
-
-        ShooterConfig.closedLoop.pid(ShooterSubsystem.P,ShooterSubsystem.I,ShooterSubsystem.D, ClosedLoopSlot.kSlot0);
+    public Shooter() {
+        shooterConfig = new SparkMaxConfig();
         
-
-        Shooter.configure(ShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-
+        shooterConfig.idleMode(IdleMode.kCoast)
+            .inverted(ShooterSubsystem.ShooterInverted)
+            .smartCurrentLimit(20, 40);
+        
+        // Configuração de encoder
+        shooterConfig.encoder.velocityConversionFactor(ShooterSubsystem.ShooterConversionFactor);
+        
+        // Ramp rate para proteger transmissão
+        shooterConfig.openLoopRampRate(ShooterSubsystem.closedLoopRampRate);
+        
+        // Configuração de malha fechada interna
+        shooterConfig.closedLoop
+            .pid(ShooterSubsystem.kP, ShooterSubsystem.kI, ShooterSubsystem.kD, ClosedLoopSlot.kSlot0);
+        
+        shooter.configure(shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
-    public void VelocitySetpoint(double setpoint)
-    {
-        Shooter.getClosedLoopController().setSetpoint(setpoint, ControlType.kVelocity);
-    }
-
-    public void setTargetRpmWithFF(double rpm)
-    {
+    /**
+     * Define a velocidade alvo do shooter usando malha fechada interna do SPARK MAX.
+     * O feedforward pode ser configurado no PID config se necessário.
+     * @param rpm Velocidade alvo em RPM
+     */
+    public void setTargetRpm(double rpm) {
         targetRpm = rpm;
-        closedLoopEnabled = true;
-        velocityPid.reset();
+        shooter.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
     }
 
-    public void disableClosedLoop()
-    {
-        closedLoopEnabled = false;
+    /**
+     * Retorna a velocidade atual do shooter em RPM.
+     */
+    public double getVelocity() {
+        return shooter.getEncoder().getVelocity();
     }
 
-    public double getVelocity()
-    {
-        return Shooter.getEncoder().getVelocity();
+    /**
+     * Verifica se o shooter está no setpoint com tolerância configurada.
+     */
+    public boolean isAtSetpoint() {
+        return Math.abs(getVelocity() - targetRpm) <= ShooterSubsystem.velocityTolerance;
     }
 
-    public void StopMotor(){
-        closedLoopEnabled = false;
+    /**
+     * Para o motor do shooter.
+     */
+    public void stopMotor() {
         targetRpm = 0.0;
-        Shooter.stopMotor();
-    } 
+        shooter.stopMotor();
+    }
 
     @Override
     public void periodic() {
         double currentRpm = getVelocity();
         SmartDashboard.putNumber("ShooterSpeed", currentRpm);
         SmartDashboard.putNumber("ShooterTargetRpm", targetRpm);
-        SmartDashboard.putBoolean("ShooterClosedLoopEnabled", closedLoopEnabled);
-
-        if (closedLoopEnabled)
-        {
-
-            double pidOut = velocityPid.calculate(currentRpm, targetRpm);
-            double ffVolts = velocityFF.calculate(targetRpm);
-
-            double volts = ffVolts + pidOut;
-            volts = MathUtil.clamp(volts, -12.0, 12.0);
-            Shooter.setVoltage(volts);
-            SmartDashboard.putNumber("ShooterAppliedVolts", volts);
-        }
+        SmartDashboard.putBoolean("ShooterAtSetpoint", isAtSetpoint());
+        SmartDashboard.putBoolean("ShooterReady", isAtSetpoint() && targetRpm > 0);
     }
-    
-    
 }

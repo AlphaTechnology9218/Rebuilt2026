@@ -1,0 +1,62 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Rota 1 D"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pontuação super mega otomatizada"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Rota 2 D"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pegar bolinhas do jogador humano"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rota 3 D"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shotasso do balacubaco"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

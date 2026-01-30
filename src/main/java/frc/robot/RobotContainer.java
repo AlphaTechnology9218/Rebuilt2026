@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -23,11 +24,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Intake;
-import frc.robot.commands.ShooterCmds.Shoot;
-import frc.robot.commands.IntakeCmds.IntakeCollector;
-import frc.robot.commands.IntakeCmds.IntakeDeploy;
-import frc.robot.commands.IntakeCmds.IntakeDeployToggle;
+import frc.robot.commands.IntakeCoralINCmd;
+import frc.robot.commands.IntakeCoraloutCmd;
+// import frc.robot.subsystems.Intake;
+// import frc.robot.commands.ShooterCmds.Shoot;
+// import frc.robot.commands.IntakeCmds.IntakeCollector;
+// import frc.robot.commands.IntakeCmds.IntakeDeploy;
+// import frc.robot.commands.IntakeCmds.IntakeDeployToggle;
+import frc.robot.commands.TestCmds.ShooterSpinTest;
+import frc.robot.subsystems.CoralIntake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,9 +43,10 @@ import frc.robot.commands.IntakeCmds.IntakeDeployToggle;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve"));
-  private final Shooter shooter = new Shooter();
-  private final Intake intake = new Intake();
+                                                                          "swerve"));
+  //private final Shooter shooter = new Shooter();
+  // private final Intake intake = new Intake();
+  private final CoralIntake CIntake = new CoralIntake();
   
   private final static CommandPS4Controller m_driverController = new CommandPS4Controller(Constants.OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_systemController = new CommandXboxController(Constants.OperatorConstants.kSystemControllerPort);
@@ -56,6 +62,9 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     configureBindings();
+      m_systemController.rightTrigger().whileTrue(new IntakeCoraloutCmd(CIntake));
+      m_systemController.leftTrigger().whileTrue(new IntakeCoralINCmd(CIntake));
+
     initializeChooser();
     
 
@@ -68,10 +77,10 @@ public class RobotContainer {
       //joystick esquerdo controla movimentação 
       //joystick direito controla a velocidade angular do robô
       //R2 (gatilho direito) controla escala de velocidade
-    Command baseDriveCommand = drivebase.driveCommand(
-      () -> MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.max(-m_driverController.getR2Axis() + 1, 0.3), OperatorConstants.LEFT_X_DEADBAND),
-      () -> MathUtil.applyDeadband(- m_driverController.getLeftX()* Math.max(-m_driverController.getR2Axis()+ 1, 0.3), OperatorConstants.LEFT_Y_DEADBAND),
-      () -> -m_driverController.getRightX() * Math.max(m_driverController.getR2Axis()+ 1, 0.565));
+      Command baseDriveCommand = drivebase.driveCommand(
+     () -> MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.max(-m_driverController.getR2Axis() + 1, 0.3), OperatorConstants.LEFT_X_DEADBAND),
+     () -> MathUtil.applyDeadband(- m_driverController.getLeftX()* Math.max(-m_driverController.getR2Axis()+ 1, 0.3), OperatorConstants.LEFT_Y_DEADBAND),
+     () -> -m_driverController.getRightX() * Math.max(m_driverController.getR2Axis()+ 1, 0.565));
 
     
 
@@ -92,30 +101,18 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Driver controller bindings (drivebase) - PS5 controller
     m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
     m_driverController.circle().onTrue(Commands.runOnce(drivebase::resetIMU));
     
-    //Right trigger (RT) -> atirar
-    m_systemController.rightTrigger(0.1).whileTrue(new Shoot(shooter));
-    
-    //left trigger (LT) -> Coletar
-    m_systemController.leftTrigger(0.1).whileTrue(new IntakeCollector(intake));
-    
-    //botão (B) para dar deploy e retrair o intake
-    m_systemController.b().onTrue(new IntakeDeployToggle(intake));
+   // new Trigger(DriverStation::isTestEnabled)
+        //.and(m_systemController.rightTrigger(0.1))
+       // .whileTrue(new ShooterSpinTest(shooter));
   }
 
 
   
   private void initializeChooser(){
-     chooser.addOption("Reta", new PathPlannerAuto("testeRetaPid"));
-      chooser.addOption("AutonomoLadoEsquerdo", new PathPlannerAuto("autonomoLadoEsquerdo"));
-      chooser.addOption("AutonomoLadoDireito", new PathPlannerAuto("autonomoLadoDireito"));
-      chooser.addOption("AutonomoCentro", new PathPlannerAuto("autonomoCentro"));
-      chooser.addOption("braco", new PathPlannerAuto("TesteBraco"));
-      chooser.addOption("intake", new PathPlannerAuto("TesteIntake"));
-      SmartDashboard.putData("CHOOSER", chooser);
+
   }   
 
   /**
@@ -128,6 +125,11 @@ public class RobotContainer {
     return chooser.getSelected();
   }
 
+  public Command getTestLockCommand() {
+    // return Commands.run(drivebase::lock, drivebase);
+    return Commands.none();
+  }
+
   public void setDriveMode()
   {
     // drivebase.setDefaultCommand();
@@ -135,6 +137,6 @@ public class RobotContainer {
 
   public void setMotorBrake(boolean brake)
   {
-    drivebase.setMotorBrake(brake);
+    // drivebase.setMotorBrake(brake);
   }
 }

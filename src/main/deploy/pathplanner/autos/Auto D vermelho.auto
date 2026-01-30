@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rota 1 vd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shotasso do balacubaco"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rota 2 vd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coletar bolinhas do human player"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rota 3 vd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shotasso do balacubaco"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
