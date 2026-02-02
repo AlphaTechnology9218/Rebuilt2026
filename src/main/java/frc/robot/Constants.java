@@ -55,7 +55,7 @@ public final class Constants {
   public static final class IntakeSubsystem
   {
     // Collector motor (NEO 550)
-    public static final int IntakeMotorID = 10;
+    public static final int IntakeMotorID = 14;
     public static final boolean intakeInverted = false;
     public static final double intakeConversionFactor = 1.0 / 4.0;
     
@@ -99,7 +99,7 @@ public final class Constants {
   }
   public static final class ShooterSubsystem
   {
-    public static final int ShooterID = 14;
+    public static final int ShooterID = 10;
     public static final boolean ShooterInverted = false;
     public static final double ShooterConversionFactor = 1.0;
 

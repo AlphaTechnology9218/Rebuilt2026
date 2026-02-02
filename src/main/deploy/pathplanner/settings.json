@@ -4,11 +4,16 @@
   "holonomicMode": true,
   "pathFolders": [
     "Auto D azul",
+    "Auto D vermelho",
     "Auto E azul",
     "Auto E vermelho",
-    "Auto D vermelho"
+    "Auto M azul",
+    "Auto M vermelho"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Auto azul",
+    "Auto vermelho"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

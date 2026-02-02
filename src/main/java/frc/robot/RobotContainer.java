@@ -24,15 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Shooter;
-import frc.robot.commands.IntakeCoralINCmd;
-import frc.robot.commands.IntakeCoraloutCmd;
+import frc.robot.commands.IntakeCmds.IntakeCollector;
+import frc.robot.commands.ShooterCmds.Shoot;
 // import frc.robot.subsystems.Intake;
 // import frc.robot.commands.ShooterCmds.Shoot;
 // import frc.robot.commands.IntakeCmds.IntakeCollector;
 // import frc.robot.commands.IntakeCmds.IntakeDeploy;
 // import frc.robot.commands.IntakeCmds.IntakeDeployToggle;
-import frc.robot.commands.TestCmds.ShooterSpinTest;
-import frc.robot.subsystems.CoralIntake;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,9 +43,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                           "swerve"));
-  //private final Shooter shooter = new Shooter();
-  // private final Intake intake = new Intake();
-  private final CoralIntake CIntake = new CoralIntake();
+  private final Shooter shooter = new Shooter();
+  private final Intake FuelIntake = new Intake();
   
   private final static CommandPS4Controller m_driverController = new CommandPS4Controller(Constants.OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_systemController = new CommandXboxController(Constants.OperatorConstants.kSystemControllerPort);
@@ -62,8 +60,8 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     configureBindings();
-      m_systemController.rightTrigger().whileTrue(new IntakeCoraloutCmd(CIntake));
-      m_systemController.leftTrigger().whileTrue(new IntakeCoralINCmd(CIntake));
+      m_systemController.rightTrigger().whileTrue(new IntakeCollector(FuelIntake));
+      m_systemController.leftTrigger().whileTrue(new Shoot(shooter));
 
     initializeChooser();
     

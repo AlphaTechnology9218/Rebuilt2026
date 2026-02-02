@@ -1,82 +1,53 @@
 package frc.robot.subsystems;
-import frc.robot.Constants.ShooterSubsystem;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ShooterSubsystem;
 
-public class Shooter extends SubsystemBase {
-    private final SparkMax shooter = new SparkMax(ShooterSubsystem.ShooterID, MotorType.kBrushless);
-    private final SparkMaxConfig shooterConfig;
-    
-    private double targetRpm = 0.0;
+public class Shooter extends SubsystemBase{
+    SparkMax intakecoral = new SparkMax (ShooterSubsystem.ShooterID, MotorType.kBrushless);
+    SparkMaxConfig config = new SparkMaxConfig ();
+    RelativeEncoder encoder = intakecoral.getEncoder();
 
-    public Shooter() {
-        shooterConfig = new SparkMaxConfig();
+        public Shooter(){
+             config.smartCurrentLimit(20, 40)
+             .idleMode(IdleMode.kBrake)
+             .openLoopRampRate(.10)
+             .inverted(false);
+
+             
+
+             intakecoral.configure(config, ResetMode.kResetSafeParameters,
+              PersistMode.kNoPersistParameters);
+             
+        }
+        public void intakemotion ( double vel){
+            intakecoral.set (vel);
+        }
+        public void intakestop (){
+            intakecoral.stopMotor();
+        }
         
-        shooterConfig.idleMode(IdleMode.kCoast)
-            .inverted(ShooterSubsystem.ShooterInverted)
-            .smartCurrentLimit(20, 40);
         
-        // Configuração de encoder
-        shooterConfig.encoder.velocityConversionFactor(ShooterSubsystem.ShooterConversionFactor);
-        
-        // Ramp rate para proteger transmissão
-        shooterConfig.openLoopRampRate(ShooterSubsystem.closedLoopRampRate);
-        
-        // Configuração de malha fechada interna
-        shooterConfig.closedLoop
-            .pid(ShooterSubsystem.kP, ShooterSubsystem.kI, ShooterSubsystem.kD, ClosedLoopSlot.kSlot0);
-        
-        shooter.configure(shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    }
+        public double getcurrent (){
+            return intakecoral.getOutputCurrent();
+            
+        }
 
-    /**
-     * Define a velocidade alvo do shooter usando malha fechada interna do SPARK MAX.
-     * O feedforward pode ser configurado no PID config se necessário.
-     * @param rpm Velocidade alvo em RPM
-     */
-    public void setTargetRpm(double rpm) {
-        targetRpm = rpm;
-        shooter.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
-    }
+        @Override
+        public void periodic() {
+            SmartDashboard.putNumber("ShooterCurrent", getcurrent());
+            SmartDashboard.putNumber("ShooterSpeed", encoder.getVelocity());
+            double current = getcurrent();
 
-    /**
-     * Retorna a velocidade atual do shooter em RPM.
-     */
-    public double getVelocity() {
-        return shooter.getEncoder().getVelocity();
-    }
+        }
 
-    /**
-     * Verifica se o shooter está no setpoint com tolerância configurada.
-     */
-    public boolean isAtSetpoint() {
-        return Math.abs(getVelocity() - targetRpm) <= ShooterSubsystem.velocityTolerance;
-    }
-
-    /**
-     * Para o motor do shooter.
-     */
-    public void stopMotor() {
-        targetRpm = 0.0;
-        shooter.stopMotor();
-    }
-
-    @Override
-    public void periodic() {
-        double currentRpm = getVelocity();
-        SmartDashboard.putNumber("ShooterSpeed", currentRpm);
-        SmartDashboard.putNumber("ShooterTargetRpm", targetRpm);
-        SmartDashboard.putBoolean("ShooterAtSetpoint", isAtSetpoint());
-        SmartDashboard.putBoolean("ShooterReady", isAtSetpoint() && targetRpm > 0);
-    }
 }

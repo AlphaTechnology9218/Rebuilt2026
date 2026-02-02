@@ -1,51 +1,37 @@
 package frc.robot.commands.ShooterCmds;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
-public class Shoot extends Command {
-    private final Shooter shooter;
-    private final double targetRpm;
+public class Shoot extends Command{
+       Shooter ShooterSubsystem;
+       Timer timer;
+       
 
-    /**
-     * Comando para atirar usando velocidade alvo específica.
-     * @param shooter Subsystem do shooter
-     * @param targetRpm Velocidade alvo em RPM
-     */
-    public Shoot(Shooter shooter, double targetRpm) {
-        this.shooter = shooter;
-        this.targetRpm = targetRpm;
-        addRequirements(shooter);
-    }
 
-    /**
-     * Comando para atirar usando velocidade padrão de Constants.
-     */
-    public Shoot(Shooter shooter) {
-        this(shooter, Constants.ShooterSubsystem.targetRpm);
+    public Shoot(Shooter subsystem){
+        this.ShooterSubsystem = subsystem;
+
+        addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        shooter.setTargetRpm(targetRpm);
+        timer = new Timer();
+        timer.reset();
     }
 
     @Override
     public void execute() {
-        // Telemetria: indica se está pronto para atirar
-        SmartDashboard.putBoolean("ShooterReadyToShoot", shooter.isAtSetpoint());
+        ShooterSubsystem.intakemotion (2);
+        timer.start();
+        
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.stopMotor();
-    }
+        ShooterSubsystem.intakestop();
 
-    @Override
-    public boolean isFinished() {
-        // Mantém rodando enquanto o botão estiver pressionado
-        return false;
     }
-}
+    }
