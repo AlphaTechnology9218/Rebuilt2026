@@ -99,7 +99,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
+    m_driverController.cross().onTrue(Commands.runOnce(() -> {
+    }));
     m_driverController.circle().onTrue(Commands.runOnce(drivebase::resetIMU));
     
    // new Trigger(DriverStation::isTestEnabled)

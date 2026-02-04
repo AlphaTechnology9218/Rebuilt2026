@@ -147,10 +147,24 @@ public class SwerveSubsystem extends SubsystemBase
     if (visionDriveTest)
     {
       swerveDrive.updateOdometry();
-//      vision.updatePoseEstimation(swerveDrive);
+ //      vision.updatePoseEstimation(swerveDrive);
     }
     SmartDashboard.putNumber("Limelight X", getVisionRotationAngle());
-     
+    
+    // Exibir valores do encoder absoluto para calibração
+    var modules = swerveDrive.getModules();
+    if (modules != null && modules.length >= 4)
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        String[] moduleNames = {"FL", "FR", "BL", "BR"};
+        double absEncoderRaw = modules[i].getAbsoluteEncoder().getAbsolutePosition();
+        double absEncoderDeg = absEncoderRaw * 360.0;
+        SmartDashboard.putNumber("Swerve/" + moduleNames[i] + "/AbsEncoderRaw", absEncoderRaw);
+        SmartDashboard.putNumber("Swerve/" + moduleNames[i] + "/AbsEncoderDeg", absEncoderDeg);
+        SmartDashboard.putNumber("Swerve/" + moduleNames[i] + "/AngleDeg", modules[i].getState().angle.getDegrees());
+      }
+    }
   }
 
   @Override
